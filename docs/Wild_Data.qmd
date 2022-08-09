@@ -1,0 +1,64 @@
+---
+title: "Part 2 Wild Data"
+author: "Andre Dextre"
+format: html
+editor: visual
+execute: 
+  warning: false
+  messages: false
+  echo: true
+  eval: false
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(skimr)
+library(here)
+```
+
+## Part 2: Wild Data
+
+What does each column contain?
+
+What are the unit of each?
+
+What is the study overall about?
+
+```{r}
+mack_verts <- read_csv(here::here("data", "AS00601.csv")) %>% clean_names()
+
+```
+
+```{r}
+mc_wt_5 <- mack_verts$weight[5]
+
+mc_wt_5
+mc_length_8_20 <- mack_verts$length1[8:20]
+
+mc_length_8_20
+
+mc_dates <- mack_verts$sampledate
+
+mc_dates
+```
+
+```{r}
+mc_salamander <- mack_verts %>% dplyr::filter(species == "DITE")
+```
+
+```{r}
+salamander_plot <- ggplot(data = mc_salamander, aes(x = length1,
+                                 y = weight)) +
+  geom_point(color = "dodgerblue2") +
+  theme() +
+  labs(x = "Length (mm)",
+       y = "Weight (g)",
+       title = "Salamander Proportions",
+       caption = "The longer the salamander the heavier",
+       subtitle = "Length (mm) vs Weight (g)")
+
+ggsave(plot = salamander_plot, here("figs", "salamander_size.png"),
+       width = 6,
+       height = 5)
+```
